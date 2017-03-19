@@ -35,14 +35,9 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Language\Character.cs" />
-    <Compile Include="Language\CharacterMapping.cs" />
     <Compile Include="Language\HiraganaAlphabet.cs" />
     <Compile Include="Language\IAlphabet.cs" />
     <Compile Include="Language\KatakanaAlphabet.cs" />
-    <Compile Include="Language\LatinHiraganaConverter.cs" />
-    <Compile Include="Language\LatinHiraganaMapper.cs" />
-    <Compile Include="Language\LatinKatakanaConverter.cs" />
-    <Compile Include="Language\LatinKatakanaMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

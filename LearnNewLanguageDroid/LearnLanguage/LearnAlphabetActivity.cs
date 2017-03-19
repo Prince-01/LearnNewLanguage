@@ -19,11 +19,12 @@ namespace LearnNewLanguageDroid.LearnLanguage
     public class LearnAlphabetActivity : Activity
     {
         private Character _currentCharacter;
-        private readonly IAlphabet hiraganaAlphabet = new HiraganaAlphabet();
-        private readonly IAlphabet katakanaAlphabet = new KatakanaAlphabet();
-        private readonly LatinHiraganaConverter hiraganaConverter = new LatinHiraganaConverter();
-        private readonly LatinKatakanaConverter katakanaConverter = new LatinKatakanaConverter();
 
+        private readonly List<IAlphabet> _alphabets = new List<IAlphabet>
+        {
+            new HiraganaAlphabet(),
+            new KatakanaAlphabet()
+        };
 
         private TextView _latinLbl;
         private TextView _detectedLbl;
@@ -35,7 +36,9 @@ namespace LearnNewLanguageDroid.LearnLanguage
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.LearnAlphabet);
-            _randomizer = new CharacterRandomizer(string.Join("", hiraganaAlphabet.Characters.Select(c => c.Symbol)) + string.Join("", katakanaAlphabet.Characters.Select(c => c.Symbol)));
+            var chars = new List<Character>();
+            _alphabets.ForEach(a => chars.AddRange(a.Characters));
+            _randomizer = new CharacterRandomizer(chars);
 
             _latinLbl = FindViewById<TextView>(Resource.Id.latinNotation);
             _detectedLbl = FindViewById<TextView>(Resource.Id.detectedCharacter);
@@ -50,17 +53,17 @@ namespace LearnNewLanguageDroid.LearnLanguage
             nextBtn.Click += NextBtnOnClick;
             remindBtn.Click += RemindBtnOnClick;
 
-            Handler handler = new Handler();
-            Timer timer = new Timer(true);
-            TimerTask timerTask = new CheckLetterTask(this);
+            var handler = new Handler();
+            var timer = new Timer(true);
+            var timerTask = new CheckLetterTask(this);
             timer.Schedule(timerTask, 1000, 1000);
         }
 
         private void SelectWanted_Click(object sender, EventArgs e)
         {
-            Intent intent = new Intent(this, typeof(SelectWantedCharactersActivity));
-            intent.PutExtra("AllCharacters", _randomizer.Characters);
-            intent.PutExtra("WantedCharacters", _randomizer.FilteredCharacters);
+            var intent = new Intent(this, typeof(SelectWantedCharactersActivity));
+            intent.PutExtra("AllCharacters", string.Join("", _randomizer.Characters.Select(fc => fc.Symbol)));
+            intent.PutExtra("WantedCharacters", string.Join("", _randomizer.FilteredCharacters.Select(fc => fc.Symbol)));
             StartActivityForResult(intent, (int)ActivityResult.WantedCharacters);
         }
 
@@ -71,7 +74,7 @@ namespace LearnNewLanguageDroid.LearnLanguage
             if (requestCode == (int)ActivityResult.WantedCharacters)
             {
                 string wantedCharacters = data.Extras.GetString(ActivityResult.WantedCharacters.ToString());
-                _randomizer.FilteredCharacters = wantedCharacters;
+                _randomizer.FilteredCharacters = _randomizer.Characters.Where(c => wantedCharacters.Contains(c.Symbol));
                 _practicingCanvas.Whitelist = wantedCharacters;
             }
         }
@@ -95,17 +98,14 @@ namespace LearnNewLanguageDroid.LearnLanguage
 
         private void showLatinNotation()
         {
-            var katakana = katakanaAlphabet.Characters.Any(c => c.Symbol == _currentCharacter.Symbol);
             _latinLbl.Text = string.Format("{0}: {1}",
-                katakana ? "Katakana" : "Hiragana",
-                katakana
-                    ? katakanaConverter.ConvertToLatin(_currentCharacter)
-                    : hiraganaConverter.ConvertToLatin(_currentCharacter));
+                _currentCharacter.Alphabet.Name,
+                _currentCharacter.InternationalNotation);
         }
 
         private void setNextCharacter()
         {
-            _currentCharacter = (Character)_randomizer.GetRandomCharacter();
+            _currentCharacter = _randomizer.GetRandomCharacter();
         }
 
         private void clearCanvas()
@@ -121,10 +121,7 @@ namespace LearnNewLanguageDroid.LearnLanguage
 
         public void Pass()
         {
-            RunOnUiThread(() =>
-            {
-                prepareNextCharacter();
-            });
+            RunOnUiThread(prepareNextCharacter);
         }
 
         public bool Passed()
@@ -143,7 +140,7 @@ namespace LearnNewLanguageDroid.LearnLanguage
             _activity = activity;
         }
 
-        private LearnAlphabetActivity _activity;
+        private readonly LearnAlphabetActivity _activity;
 
         public override void Run()
         {
@@ -155,7 +152,7 @@ namespace LearnNewLanguageDroid.LearnLanguage
     public class CallOnce
     {
         private bool _called;
-        private Action _action;
+        private readonly Action _action;
 
         public CallOnce(Action action)
         {

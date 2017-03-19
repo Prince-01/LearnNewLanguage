@@ -6,12 +6,16 @@ namespace LearnNewLanguageCore.Language
 {
     public class Character
     {
-        public Character(char symbol)
+        public Character(char symbol, string internationalNotation, IAlphabet alphabet)
         {
             Symbol = symbol;
+            InternationalNotation = internationalNotation;
+            Alphabet = alphabet;
         }
 
         public char Symbol { get; set; }
+        public string InternationalNotation { get; set; }
+        public IAlphabet Alphabet { get; set; }
 
         public override string ToString()
         {
@@ -22,16 +26,6 @@ namespace LearnNewLanguageCore.Language
         {
             var ch = obj as Character;
             return ch != null && Symbol == ch.Symbol;
-        }
-
-        public static explicit operator Character(char c)
-        {
-            return new Character(c);
-        }
-
-        public static IEnumerable<Character> GetMany(string s)
-        {
-            return s.Cast<char>().Select(character => (Character) character).ToList();
         }
     }
 }

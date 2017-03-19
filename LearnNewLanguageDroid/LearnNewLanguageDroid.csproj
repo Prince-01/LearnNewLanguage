@@ -69,6 +69,7 @@
     <Compile Include="LearnLanguage\ActivityResult.cs" />
     <Compile Include="LearnLanguage\CharacterRandomizer.cs" />
     <Compile Include="LearnLanguage\LearnAlphabetActivity.cs" />
+    <Compile Include="LearnLanguage\NoCharactersAvailableException.cs" />
     <Compile Include="LearnLanguage\SelectWantedCharactersActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\ISelectedCharactersItem.cs" />
