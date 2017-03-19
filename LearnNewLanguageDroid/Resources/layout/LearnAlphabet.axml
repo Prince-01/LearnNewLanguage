@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="clr-namespace:LearnNewLanguageDroid;assembly=LearnNewLanguageDroid"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+    <TextView
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/latinNotation" />
+    <TextView
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:id="@+id/detectedCharacter" />
+  </LinearLayout>
+  <LearnNewLanguageDroid.Views.PaintSurfaceView
+      android:layout_width="match_parent"
+      android:layout_height="0dip"
+      android:layout_weight="1"
+      android:id="@+id/practicingCanvas" />
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="0">
+    <Button
+        android:text="Remind me"
+        android:id="@+id/remindMeCharacter"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+    <Button
+        android:text="Next character"
+        android:id="@+id/nextCharacter"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+    <Button
+        android:text="Select wanted"
+        android:id="@+id/selectWantedBtn"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+  </LinearLayout>
+</LinearLayout>
